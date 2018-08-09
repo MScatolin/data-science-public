@@ -1,0 +1,16 @@
+
+  SELECT
+   start_station_name AS customer_commuters,
+   round(COUNT(trip_id)*100/983648,2) AS ct_st
+ FROM
+   `bigquery-public-data.san_francisco.bikeshare_trips`
+ WHERE
+   duration_sec >= 180
+   AND duration_sec <= 1800
+   AND subscriber_type = "Customer"
+ GROUP BY
+   start_station_name
+ ORDER BY
+   ct_st DESC
+ LIMIT
+   5 

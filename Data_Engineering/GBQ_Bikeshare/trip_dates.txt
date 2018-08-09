@@ -1,0 +1,15 @@
+
+    #standardSQL
+    SELECT
+      first,
+      last
+    FROM (
+      SELECT
+        MIN(start_date) AS first
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`) AS head,
+      (
+      SELECT
+        MAX(end_date) AS last
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`) AS tail

@@ -1,0 +1,15 @@
+
+    SELECT
+    concat(start_station_name," to ", end_station_name) AS customer_casual,
+    COUNT(trip_id) AS ct_trip
+  FROM
+    `bigquery-public-data.san_francisco.bikeshare_trips`
+  WHERE
+    duration_sec > 1800
+    AND subscriber_type = "Customer"
+  GROUP BY
+    customer_casual
+  ORDER BY
+    ct_trip DESC
+  LIMIT
+    5 

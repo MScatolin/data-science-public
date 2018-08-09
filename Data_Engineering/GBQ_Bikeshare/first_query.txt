@@ -1,0 +1,7 @@
+
+    #standardSQL
+    SELECT
+      COUNT(trip_id)
+    FROM
+      `bigquery-public-data.san_francisco.bikeshare_trips`
+    

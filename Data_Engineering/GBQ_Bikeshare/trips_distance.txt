@@ -1,0 +1,69 @@
+
+    
+CREATE TEMP FUNCTION RADI(x FLOAT64) AS ( ACOS(-1) * x / 180 );
+CREATE TEMP FUNCTION RADIANS_TO_KM(x FLOAT64) AS ( 111.045 * 180 * x / ACOS(-1) );
+CREATE TEMP FUNCTION HAVERSINE(lat1 FLOAT64, long1 FLOAT64, lat2 FLOAT64, long2 FLOAT64) AS ( 
+  RADIANS_TO_KM( 
+   ACOS(COS(RADI(lat1)) * COS(RADI(lat2)) * 
+   COS(RADI(long1) - RADI(long2)) + 
+   SIN(RADI(lat1)) * SIN(RADI(lat2)))) 
+);
+SELECT
+    subscribers_commuter,
+    subscribers_casual,
+    customers_commuter,
+    customers_casual
+FROM (
+ SELECT
+   ROUND(AVG(HAVERSINE(START_st_lat,
+       START_st_long,
+       end_st_lat,
+       end_st_long)),2) AS subscribers_commuter
+ FROM
+   `bike_trip_data.bikeshare_trips_dists`
+ WHERE
+   duration_sec >= 180
+   AND duration_sec <= 1800
+   AND subscriber_type = "Subscriber"
+   AND START_st_lat != end_st_lat
+   AND start_st_long != end_st_long ) AS sub_com,
+ (
+ SELECT
+   ROUND(AVG(HAVERSINE(START_st_lat,
+       START_st_long,
+       end_st_lat,
+       end_st_long)),2) AS subscribers_casual
+ FROM
+   `bike_trip_data.bikeshare_trips_dists`
+ WHERE
+   duration_sec >1800
+   AND subscriber_type = "Subscriber"
+   AND START_st_lat != end_st_lat
+   AND start_st_long != end_st_long ) AS sub_cas,
+ (
+ SELECT
+   ROUND(AVG(HAVERSINE(start_st_lat,
+       start_st_long,
+       end_st_lat,
+       end_st_long)),2) AS customers_commuter
+ FROM
+   `bike_trip_data.bikeshare_trips_dists`
+ WHERE
+   duration_sec >= 180
+   AND duration_sec <= 1800
+   AND subscriber_type = "Customer"
+   AND START_st_lat != end_st_lat
+   AND start_st_long != end_st_long ) AS cus_com,
+ (
+SELECT
+   ROUND(AVG(HAVERSINE(start_st_lat,
+       start_st_long,
+       end_st_lat,
+       end_st_long)),2) AS customers_casual
+FROM
+  `bike_trip_data.bikeshare_trips_dists`
+WHERE
+  duration_sec > 1800
+  AND subscriber_type = "Customer"
+  AND START_st_lat != end_st_lat
+  AND start_st_long != end_st_long ) AS cus_cas

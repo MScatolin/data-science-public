@@ -1,0 +1,5 @@
+
+    SELECT
+      COUNT(DISTINCT bike_number) AS bike_count
+    FROM
+      `bigquery-public-data.san_francisco.bikeshare_trips`

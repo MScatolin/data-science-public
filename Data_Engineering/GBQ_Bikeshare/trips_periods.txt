@@ -1,0 +1,48 @@
+
+    SELECT
+      early_day,
+      morning,
+      afternoon,
+      night,
+      late_night
+    FROM (
+      SELECT
+        COUNT(trip_id) AS early_day
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`
+      WHERE
+        EXTRACT(hour FROM start_date) >= 0
+        AND EXTRACT(hour FROM start_date) < 5 ) AS early_day_query,
+        (
+      SELECT
+        COUNT(trip_id) AS morning
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`
+      WHERE
+        EXTRACT(hour FROM start_date) >= 5
+        AND EXTRACT(hour FROM start_date) < 12 ) AS day_query,
+        (
+      SELECT
+        COUNT(trip_id) AS afternoon
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`
+      WHERE
+        EXTRACT(hour FROM start_date) >= 12
+        AND EXTRACT(hour FROM start_date) < 17 ) AS early_afternoon,
+      (
+      SELECT
+        COUNT(trip_id) AS night
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`
+      WHERE
+        EXTRACT(hour FROM start_date) >= 17
+        AND EXTRACT(hour FROM start_date) < 20 ) AS night_query,
+      (
+      SELECT
+        COUNT(trip_id) AS late_night
+      FROM
+        `bigquery-public-data.san_francisco.bikeshare_trips`
+      WHERE
+        EXTRACT(hour FROM start_date) >= 20
+        AND EXTRACT(hour FROM start_date) < 24 ) AS late_night_query
+        

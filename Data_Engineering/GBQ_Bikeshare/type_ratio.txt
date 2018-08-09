@@ -1,0 +1,40 @@
+
+SELECT
+  subscribers_commuter,
+  subscribers_casual,
+  customers_commuter,
+  customers_casual
+FROM (
+  SELECT
+    ROUND(COUNT(duration_sec)*100/(983648),2) AS subscribers_commuter
+  FROM
+    `bigquery-public-data.san_francisco.bikeshare_trips`
+  WHERE
+    duration_sec >= 180
+    AND duration_sec <= 1800
+    AND subscriber_type = "Subscriber" ) AS sub_com,
+  (
+  SELECT
+    ROUND(COUNT(duration_sec)*100/(983648),2) AS subscribers_casual
+  FROM
+    `bigquery-public-data.san_francisco.bikeshare_trips`
+  WHERE
+    duration_sec > 1800
+    AND subscriber_type = "Subscriber" ) AS sub_cas,
+  (
+  SELECT
+    ROUND(COUNT(duration_sec)*100/(983648),2) AS customers_commuter
+  FROM
+    `bigquery-public-data.san_francisco.bikeshare_trips`
+  WHERE
+    duration_sec >= 180
+    AND duration_sec <= 1800
+    AND subscriber_type = "Customer" ) AS cus_com,
+  (
+  SELECT
+    ROUND(COUNT(duration_sec)*100/(983648),2) AS customers_casual
+  FROM
+    `bigquery-public-data.san_francisco.bikeshare_trips`
+  WHERE
+    duration_sec > 1800
+    AND subscriber_type = "Customer" ) AS cus_cas

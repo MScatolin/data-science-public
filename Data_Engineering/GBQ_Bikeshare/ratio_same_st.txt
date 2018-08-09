@@ -1,0 +1,43 @@
+
+SELECT
+  subscribers_commuter, --subscribers commuter trip count = 
+  subscribers_casual, --subscribers casual trip count = 
+  customers_commuter, --customer commuter trip count = 
+  customers_casual --customer casual trip count = 
+FROM (
+  SELECT
+    ROUND(count(trip_id)*100/809238,2) AS subscribers_commuter
+  FROM
+    `bike_trip_data.bikeshare_trips_dists`
+  WHERE
+    duration_sec >= 180
+    AND duration_sec <= 1800
+    AND start_station_id = end_station_id ) AS sub_com,
+  (
+  SELECT
+    ROUND(count(trip_id)*100/5324,2) AS subscribers_casual
+  FROM
+    `bike_trip_data.bikeshare_trips_dists`
+  WHERE
+    duration_sec >1800
+    AND subscriber_type = "Subscriber"
+    AND start_station_id = end_station_id ) AS sub_cas,
+  (
+  SELECT
+    ROUND(count(trip_id)*100/93528,2) AS customers_commuter
+  FROM
+    `bike_trip_data.bikeshare_trips_dists`
+  WHERE
+    duration_sec >= 180
+    AND duration_sec <= 1800
+    AND subscriber_type = "Customer"
+    AND start_station_id = end_station_id ) AS cus_com,
+  (
+  SELECT
+    ROUND(count(trip_id)*100/42013,2) AS customers_casual
+  FROM
+    `bike_trip_data.bikeshare_trips_dists`
+  WHERE
+    duration_sec > 1800
+    AND subscriber_type = "Customer"
+    AND start_station_id = end_station_id ) AS cus_cas
