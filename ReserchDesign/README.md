@@ -1,5 +1,4 @@
 # RDADA (Research Design and Data Analysis)
-<<<<<<< HEAD
 ### UC Berkeley - MIDS
 ### Marcelo Scatolin Queiroz
 #### Term 1: Spring 2018
@@ -31,4 +30,3 @@ Term 1: Spring 2018
 
 Each presentation are results of studies done during the course.
 
->>>>>>> f5a85a18b58e992dfaa7626da381c82b1e4e068a
